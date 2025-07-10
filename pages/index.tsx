@@ -1,35 +1,61 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import ArticleCard from '@/components/ArticleCard'
+
+const dummyArticles = [
+  {
+    title: "Nova zakonodaja v DZ: Kaj prinaša sprememba?",
+    summary: "AI povzetek: V državnem zboru so sprejeli nov zakon...",
+    source: "RTV Slovenija",
+    time: "danes ob 10:12",
+    url: "https://rtvslo.si"
+  },
+  {
+    title: "Nogomet: Slovenija premagala Srbijo",
+    summary: "AI povzetek: Slovenija je z 2:1 premagala reprezentanco Srbije...",
+    source: "24ur",
+    time: "danes ob 8:45",
+    url: "https://24ur.com"
+  },
+  {
+    title: "Nova tehnologija AI navdušuje svet",
+    summary: "AI povzetek: Tehnološki svet pretresa nova platforma umetne inteligence...",
+    source: "Siol.net",
+    time: "včeraj ob 22:10",
+    url: "https://siol.net"
+  }
+]
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(true)
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [darkMode])
-
   return (
-    <div className="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
+    <>
       <Head>
         <title>Agregator Danes</title>
       </Head>
-      <header className="flex justify-between items-center p-4 border-b border-gray-700">
-        <h1 className="text-xl font-bold">📰 Agregator Danes</h1>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="bg-gray-200 dark:bg-gray-800 p-2 rounded"
-        >
-          {darkMode ? '🌙' : '☀️'}
-        </button>
-      </header>
-      <main className="p-4">
-        <h2 className="text-2xl mb-4">Dobrodošel!</h2>
-        <p>Začetek slovenskega agregatorja novic z AI povzetki.</p>
+      <Header />
+      <main className="p-6 max-w-4xl mx-auto">
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">📰 Glavna novica</h2>
+          <ArticleCard {...dummyArticles[0]} />
+        </section>
+
+        <section id="politika" className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">🗳️ Politika</h2>
+          <ArticleCard {...dummyArticles[0]} />
+        </section>
+
+        <section id="sport" className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">⚽ Šport</h2>
+          <ArticleCard {...dummyArticles[1]} />
+        </section>
+
+        <section id="tehnologija" className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">🧠 Tehnologija</h2>
+          <ArticleCard {...dummyArticles[2]} />
+        </section>
       </main>
-    </div>
+      <Footer />
+    </>
   )
 }
