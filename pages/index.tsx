@@ -2,32 +2,35 @@ import Head from 'next/head'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ArticleCard from '@/components/ArticleCard'
+import { useEffect, useState } from 'react'
 
-const dummyArticles = [
-  {
-    title: "Nova zakonodaja v DZ: Kaj prinaša sprememba?",
-    summary: "AI povzetek: V državnem zboru so sprejeli nov zakon...",
-    source: "RTV Slovenija",
-    time: "danes ob 10:12",
-    url: "https://rtvslo.si"
-  },
-  {
-    title: "Nogomet: Slovenija premagala Srbijo",
-    summary: "AI povzetek: Slovenija je z 2:1 premagala reprezentanco Srbije...",
-    source: "24ur",
-    time: "danes ob 8:45",
-    url: "https://24ur.com"
-  },
-  {
-    title: "Nova tehnologija AI navdušuje svet",
-    summary: "AI povzetek: Tehnološki svet pretresa nova platforma umetne inteligence...",
-    source: "Siol.net",
-    time: "včeraj ob 22:10",
-    url: "https://siol.net"
-  }
-]
+type NewsItem = {
+  title: string
+  link: string
+  pubDate: string
+  source: string
+}
 
 export default function Home() {
+  const [news, setNews] = useState<NewsItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await fetch('/api/news')
+        const data = await res.json()
+        setNews(data)
+      } catch (err) {
+        console.error('Napaka pri nalaganju novic:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNews()
+  }, [])
+
   return (
     <>
       <Head>
@@ -35,25 +38,25 @@ export default function Home() {
       </Head>
       <Header />
       <main className="p-6 max-w-4xl mx-auto">
-        <section className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">📰 Glavna novica</h2>
-          <ArticleCard {...dummyArticles[0]} />
-        </section>
+        <h2 className="text-2xl font-bold mb-6">📰 Glavne novice</h2>
 
-        <section id="politika" className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">🗳️ Politika</h2>
-          <ArticleCard {...dummyArticles[0]} />
-        </section>
+        {loading && <p className="text-gray-400">Nalagam novice ...</p>}
 
-        <section id="sport" className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">⚽ Šport</h2>
-          <ArticleCard {...dummyArticles[1]} />
-        </section>
+        {!loading && news.length === 0 && (
+          <p className="text-red-500">Novic ni bilo mogoče naložiti.</p>
+        )}
 
-        <section id="tehnologija" className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">🧠 Tehnologija</h2>
-          <ArticleCard {...dummyArticles[2]} />
-        </section>
+        {!loading &&
+          news.map((item, idx) => (
+            <ArticleCard
+              key={idx}
+              title={item.title}
+              summary=""
+              source={item.source}
+              time={new Date(item.pubDate).toLocaleString('sl-SI')}
+              url={item.link}
+            />
+          ))}
       </main>
       <Footer />
     </>
