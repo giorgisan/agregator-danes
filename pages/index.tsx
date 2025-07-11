@@ -72,7 +72,7 @@ export default function Home() {
         )}
 
         {viewMode === 'byTime' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {allArticlesSorted.map((item, index) => (
               <ArticleCard
                 key={`${item.source}-${index}`}
@@ -90,7 +90,7 @@ export default function Home() {
             {Object.entries(newsBySource).map(([source, articles]) => (
               <section key={source}>
                 <h2 className="text-2xl font-bold mb-4">{source}</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                   {articles.map((item, index) => (
                     <ArticleCard
                       key={`${source}-${index}`}
