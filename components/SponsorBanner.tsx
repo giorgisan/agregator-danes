@@ -2,7 +2,7 @@
 import sponsor from '@/data/sponsor'
 
 export default function SponsorBanner() {
-  if (!sponsor?.name || !sponsor?.url) return null
+  if (!sponsor?.enabled || !sponsor?.name || !sponsor?.url) return null
 
   return (
     <div className="mt-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-4 py-2 rounded-md text-sm shadow-sm">
@@ -18,3 +18,4 @@ export default function SponsorBanner() {
     </div>
   )
 }
+
