@@ -1,7 +1,4 @@
 import Parser from 'rss-parser'
-import OpenAI from 'openai'
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 const parser: Parser<any> = new Parser({
   customFields: {
@@ -12,7 +9,9 @@ const parser: Parser<any> = new Parser({
 const feeds = [
   { name: '24ur', url: 'https://www.24ur.com/rss/' },
   { name: 'RTV Slovenija', url: 'https://www.rtvslo.si/rss' },
-  { name: 'Delo', url: 'https://www.delo.si/rss/' }
+  { name: 'Delo', url: 'https://www.delo.si/rss/' },
+  { name: 'Siol.net', url: 'https://www.siol.net/rss/novice.xml' },
+  { name: 'Dnevnik', url: 'https://www.dnevnik.si/rss' }
 ]
 
 function extractImageFromDescription(desc?: string): string | null {
@@ -21,31 +20,14 @@ function extractImageFromDescription(desc?: string): string | null {
   return match ? match[1] : null
 }
 
-async function selectMostProminentArticle(items: any[], source: string) {
-  const titles = items.map((item, i) => `${i + 1}. ${item.title}`).join('\n')
-
-  const prompt = `Spodaj je seznam naslovov novic s portala ${source}. Izberi tisto novico, ki je najbolj odmevna, pomembna ali zanimiva za širšo javnost. Vrni samo točen naslov, brez številke.\n\n${titles}`
-
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.3
-  })
-
-  const chosenTitle = response.choices[0].message?.content?.trim()
-  const selected = items.find(item => item.title === chosenTitle)
-
-  return selected || items[0]
-}
-
-export async function fetchAllFeeds() {
-  const allItems = []
+export async function fetchAllFeedsBySource() {
+  const results: Record<string, any[]> = {}
 
   for (const feed of feeds) {
     try {
       const parsedFeed = await parser.parseURL(feed.url)
 
-      const items = parsedFeed.items?.slice(0, 7).map(item => {
+      const items = parsedFeed.items?.slice(0, 5).map(item => {
         const image =
           item.enclosure?.url ||
           item['media:content']?.url ||
@@ -61,13 +43,13 @@ export async function fetchAllFeeds() {
         }
       }) || []
 
-      const topArticle = await selectMostProminentArticle(items, feed.name)
-
-      if (topArticle) allItems.push(topArticle)
+      results[feed.name] = items.sort(
+        (a, b) => new Date(b.pubDate!).getTime() - new Date(a.pubDate!).getTime()
+      )
     } catch (err) {
       console.error(`Napaka pri feedu ${feed.name}:`, err)
     }
   }
 
-  return allItems.sort((a, b) => new Date(b.pubDate!).getTime() - new Date(a.pubDate!).getTime())
+  return results
 }
