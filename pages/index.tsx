@@ -18,7 +18,7 @@ type NewsBySource = Record<string, Article[]>
 export default function Home() {
   const [newsBySource, setNewsBySource] = useState<NewsBySource>({})
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<'bySource' | 'byTime'>('bySource')
+  const [viewMode, setViewMode] = useState<'bySource' | 'byTime'>('byTime')
 
   useEffect(() => {
     const fetchNews = async () => {
