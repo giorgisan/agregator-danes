@@ -20,6 +20,16 @@ function extractImage(item: any): string | undefined {
   return match ? match[1] : undefined
 }
 
+function fallbackItem(item: any, source: string): any {
+  return {
+    title: item.title || '',
+    link: item.link || '',
+    pubDate: item.pubDate || '',
+    source,
+    image: undefined,
+  }
+}
+
 export default async function fetchRSSFeeds() {
   const results: Record<string, any[]> = {}
 
@@ -34,13 +44,20 @@ export default async function fetchRSSFeeds() {
           return
         }
 
-        const parsed = feed.items.slice(0, 5).map(item => ({
-          title: item.title || '',
-          link: item.link || '',
-          pubDate: item.pubDate || '',
-          source,
-          image: extractImage(item) || '/default-news.jpg',
-        }))
+        const parsed = feed.items.slice(0, 5).map(item => {
+          // Obvodi za določene vire
+          if (['Siol.net', 'RTVSLO', 'Zurnal24'].includes(source)) {
+            return fallbackItem(item, source)
+          }
+
+          return {
+            title: item.title || '',
+            link: item.link || '',
+            pubDate: item.pubDate || '',
+            source,
+            image: extractImage(item) || '/default-news.jpg',
+          }
+        })
 
         console.log(`✅ ${source}: ${parsed.length} člankov uspešno prebranih.`)
         results[source] = parsed
@@ -51,6 +68,5 @@ export default async function fetchRSSFeeds() {
     })
   )
 
-  console.log(`📊 Skupno virov: ${Object.keys(results).length}`)
   return results
 }
