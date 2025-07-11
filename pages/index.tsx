@@ -49,7 +49,7 @@ export default function Home() {
       </Head>
       <Header />
       <main className="p-6 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">🗞️ Glavne novice po virih</h1>
+        <h1 className="text-3xl font-bold mb-6">🗞️ Najnoveše objavljene novice/h1>
 
         {loading && <p className="text-gray-400">Nalagam novice ...</p>}
 
