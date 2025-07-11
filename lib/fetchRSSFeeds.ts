@@ -12,22 +12,20 @@ const feeds: Record<string, string> = {
   'Delo': 'https://www.delo.si/rss',
 }
 
+// 🔧 Nova različica funkcije za iskanje slik
 function extractImage(item: any): string | undefined {
+  // 1. enclosure
   if (item.enclosure?.url) return item.enclosure.url
-  if (item['media:content']?.url) return item['media:content'].url
-  const desc = item.content || item.description || ''
-  const match = desc.match(/<img.*?src="(.*?)"/)
-  return match ? match[1] : undefined
-}
 
-function fallbackItem(item: any, source: string): any {
-  return {
-    title: item.title || '',
-    link: item.link || '',
-    pubDate: item.pubDate || '',
-    source,
-    image: undefined,
-  }
+  // 2. media:content
+  if (item['media:content']?.url) return item['media:content'].url
+
+  // 3. Išči <img src="..."> v content / description / contentSnippet
+  const html = item.content || item.description || item.contentSnippet || ''
+  const match = html.match(/<img[^>]+src="([^">]+)"/i)
+  if (match && match[1]) return match[1]
+
+  return undefined
 }
 
 export default async function fetchRSSFeeds() {
@@ -44,20 +42,13 @@ export default async function fetchRSSFeeds() {
           return
         }
 
-        const parsed = feed.items.slice(0, 5).map(item => {
-          // Obvodi za določene vire
-          if (['Siol.net', 'RTVSLO', 'Zurnal24'].includes(source)) {
-            return fallbackItem(item, source)
-          }
-
-          return {
-            title: item.title || '',
-            link: item.link || '',
-            pubDate: item.pubDate || '',
-            source,
-            image: extractImage(item) || '/default-news.jpg',
-          }
-        })
+        const parsed = feed.items.slice(0, 5).map(item => ({
+          title: item.title || '',
+          link: item.link || '',
+          pubDate: item.pubDate || '',
+          source,
+          image: extractImage(item) || '/default-news.jpg',
+        }))
 
         console.log(`✅ ${source}: ${parsed.length} člankov uspešno prebranih.`)
         results[source] = parsed
