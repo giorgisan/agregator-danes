@@ -1,25 +1,18 @@
-// pages/api/news.ts
+// /pages/api/news.ts
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { fetchAllFeedsBySource } from '@/lib/fetchRSSFeeds'
+import fetchRSSFeeds from '@/lib/fetchRSSFeeds'
 
 let cachedNews: Record<string, any[]> = {}
 let lastFetchTime: number = 0
+const CACHE_DURATION = 5 * 60 * 1000 // 5 minut
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const now = Date.now()
-  const cacheDuration = 10 * 60 * 1000 // 10 minut
 
-  if (now - lastFetchTime < cacheDuration && Object.keys(cachedNews).length > 0) {
-    return res.status(200).json(cachedNews)
-  }
-
-  try {
-    const news = await fetchAllFeedsBySource()
-    cachedNews = news
+  if (now - lastFetchTime > CACHE_DURATION || Object.keys(cachedNews).length === 0) {
+    cachedNews = await fetchRSSFeeds()
     lastFetchTime = now
-    res.status(200).json(news)
-  } catch (err) {
-    console.error('Napaka pri pridobivanju novic:', err)
-    res.status(500).json({ error: 'Napaka pri pridobivanju novic' })
   }
+
+  res.status(200).json(cachedNews)
 }
