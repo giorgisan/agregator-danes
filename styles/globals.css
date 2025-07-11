@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Splošni stil */
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f9fafb; /* svetel način ozadje */
+  color: #111827;
+}
+
+/* Temni način */
+.dark body {
+  background-color: #0f172a; /* temna mornarsko modra kot ChatGPT */
+  color: #f1f5f9;
+}
+
+/* Omogoči gladek prehod med temami */
+body,
+a,
+h1,
+h2,
+h3,
+p,
+div {
+  transition: background-color 0.3s, color 0.3s;
 }
