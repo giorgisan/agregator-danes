@@ -14,15 +14,6 @@ const feeds: Record<string, string> = {
   'Domovina': 'https://www.domovina.je/feed',
 }
 
-function classifyCategory(title: string): string {
-  const lower = title.toLowerCase()
-
-  if (lower.match(/vlada|ministr|volitve|parlament|evropsk|državni zbor|stranka|politika|predsednik/i)) return 'politika'
-  if (lower.match(/nogomet|košarka|gol|tekma|kolesar|šport|liga|reprezentanca|olimpija|maribor/i)) return 'sport'
-  if (lower.match(/ai|tehnologija|računalnik|startup|robot|umetna inteligenca|aplikacija|internet|program|splet/i)) return 'tehnologija'
-  return 'drugo'
-}
-
 function extractImage(item: any): string | undefined {
   if (item.enclosure?.url) return item.enclosure.url
   if (item['media:content']?.url) return item['media:content'].url
@@ -32,7 +23,7 @@ function extractImage(item: any): string | undefined {
 }
 
 export default async function fetchRSSFeeds() {
-  const allArticles: any[] = []
+  const results: Record<string, any[]> = {}
 
   await Promise.all(
     Object.entries(feeds).map(async ([source, url]) => {
@@ -41,6 +32,7 @@ export default async function fetchRSSFeeds() {
 
         if (!feed.items || feed.items.length === 0) {
           console.warn(`⚠️  Vir ${source} ne vsebuje nobene novice.`)
+          results[source] = []
           return
         }
 
@@ -50,17 +42,17 @@ export default async function fetchRSSFeeds() {
           pubDate: item.pubDate || '',
           source,
           image: extractImage(item) || '/default-news.jpg',
-          category: classifyCategory(item.title || ''),
         }))
 
         console.log(`✅ ${source}: ${parsed.length} člankov uspešno prebranih.`)
-        allArticles.push(...parsed)
+        results[source] = parsed
       } catch (err) {
         console.error(`❌ Napaka pri branju vira ${source}:`, err)
+        results[source] = []
       }
     })
   )
 
-  console.log(`📊 Skupno člankov pridobljenih: ${allArticles.length}`)
-  return allArticles
+  console.log(`📊 Skupno virov: ${Object.keys(results).length}`)
+  return results
 }
