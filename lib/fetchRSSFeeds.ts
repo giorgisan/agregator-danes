@@ -7,9 +7,8 @@ const feeds: Record<string, string> = {
   'Delo': 'https://www.delo.si/rss',
   'RTVSLO': 'https://www.rtvslo.si/rss',
   '24ur': 'https://www.24ur.com/rss',
-  'Siol.net': 'https://www.siol.net/rss/novice',
-  'Primorske': 'https://www.primorske.si/rss',
-  'Večer': 'https://www.vecer.com/rss/vecer',
+  'Siol.net': 'https://www.siol.net/rss',
+  'Večer': 'https://www.vecer.com/rss',
   'Slovenske novice': 'https://www.slovenskenovice.si/rss',
   'Domovina': 'https://www.domovina.je/feed',
 }
