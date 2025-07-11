@@ -19,7 +19,7 @@ export default function ArticleCard({ title, summary, source, time, url, image }
       <img
         src={image || "/default-news.jpg"}
         alt={title}
-        className="w-full aspect-[4/3] object-cover"
+        className="w-full aspect-square object-cover"
       />
       <div className="p-2">
         <h3 className="text-sm font-medium text-gray-800 dark:text-white leading-tight mb-1">{title}</h3>
