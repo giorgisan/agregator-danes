@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import SponsorBanner from './SponsorBanner'
 
 export default function Header() {
   const [darkMode, setDarkMode] = useState(true)
@@ -18,9 +19,7 @@ export default function Header() {
         <h1 className="text-xl font-bold text-gray-800 dark:text-white transition">
           <Link href="/">📰 Agregator Danes</Link>
         </h1>
-        <div className="mt-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-4 py-2 rounded-md text-sm shadow-sm">
-          Dnevni pokrovitelj: <a href="https://primer-pokrovitelja.si" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-600 dark:hover:text-yellow-300">Podjetje XYZ</a>
-        </div>
+        <SponsorBanner />
       </div>
 
       <button
