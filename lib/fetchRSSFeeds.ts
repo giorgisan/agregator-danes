@@ -5,9 +5,9 @@ const parser = new Parser()
 
 const feeds: Record<string, string> = {
   '24ur': 'https://www.24ur.com/rss',
-  'RTVSLO': 'https://www.rtvslo.si/rss',
-  'Siol.net': 'https://www.siol.net/rss',
-  'Zurnal24': 'https://www.zurnal24.si/rss',
+  'RTVSLO': 'https://img.rtvslo.si/feeds/00.xml',
+  'Siol.net': 'https://siol.net/feeds/latest',
+  'Zurnal24': 'https://www.zurnal24.si/feeds/latest',
   'Slovenske novice': 'https://www.slovenskenovice.si/rss',
   'Delo': 'https://www.delo.si/rss',
 }
