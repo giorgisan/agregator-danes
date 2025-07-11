@@ -11,7 +11,7 @@ const feeds = [
   { name: '24ur', url: 'https://www.24ur.com/rss/' },
   { name: 'RTV Slovenija', url: 'https://www.rtvslo.si/rss' },
   { name: 'Delo', url: 'https://www.delo.si/rss/' },
-  { name: 'Siol.net', url: 'https://siol.net/rss/novice.xml' },
+  { name: 'Siol.net', url: 'https://www.siol.net/rss/novice.xml' },
   { name: 'Dnevnik', url: 'https://www.dnevnik.si/rss' }
 ]
 
@@ -25,6 +25,8 @@ export async function fetchAllFeedsBySource() {
   const results: Record<string, any[]> = {}
 
   for (const feed of feeds) {
+    console.log(`🔁 Obdelujem vir: ${feed.name}`)
+
     try {
       const parsedFeed = await parser.parseURL(feed.url)
 
@@ -36,9 +38,9 @@ export async function fetchAllFeedsBySource() {
           '/default-news.jpg'
 
         return {
-          title: item.title,
-          link: item.link,
-          pubDate: item.pubDate,
+          title: item.title || 'Brez naslova',
+          link: item.link || '#',
+          pubDate: item.pubDate || new Date().toISOString(),
           source: feed.name,
           image
         }
@@ -47,8 +49,11 @@ export async function fetchAllFeedsBySource() {
       results[feed.name] = items.sort(
         (a, b) => new Date(b.pubDate!).getTime() - new Date(a.pubDate!).getTime()
       )
+
+      console.log(`✅ Uspešno pridobljenih ${items.length} novic za ${feed.name}`)
     } catch (err) {
       console.error(`❌ Napaka pri feedu ${feed.name}:`, (err as any).message || err)
+      results[feed.name] = []
     }
   }
 
