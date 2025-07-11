@@ -1,3 +1,4 @@
+// /components/ArticleCard.tsx
 type Props = {
   title: string
   summary: string
@@ -18,7 +19,7 @@ export default function ArticleCard({ title, summary, source, time, url, image }
       <img
         src={image || "/default-news.jpg"}
         alt={title}
-        className="w-full h-48 object-cover rounded-md mb-4"
+        className="w-full h-32 object-cover rounded-md mb-3"
       />
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <p className="text-sm text-gray-400 mb-2">{summary}</p>
