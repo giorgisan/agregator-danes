@@ -42,7 +42,7 @@ export default async function fetchRSSFeeds() {
           return
         }
 
-        const parsed = feed.items.slice(0, 5).map(item => ({
+        const parsed = feed.items.slice(0, 15).map(item => ({
           title: item.title || '',
           link: item.link || '',
           pubDate: item.pubDate || '',
