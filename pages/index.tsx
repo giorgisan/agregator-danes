@@ -1,4 +1,4 @@
-// pages/index.tsx
+// /pages/index.tsx
 import Head from 'next/head'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -49,7 +49,7 @@ export default function Home() {
         <title>Agregator Danes</title>
       </Head>
       <Header />
-      <main className="p-6 max-w-6xl mx-auto">
+      <main className="px-4 py-6 max-w-full overflow-x-auto">
         <h1 className="text-3xl font-bold mb-6">🗞️ Zadnje novice v slovenskih medijih</h1>
 
         {loading && <p className="text-gray-400">Nalagam novice ...</p>}
@@ -58,21 +58,23 @@ export default function Home() {
           <p className="text-red-500">Ni uspelo naložiti novic.</p>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex gap-6 overflow-x-auto">
           {Object.entries(newsBySource).map(([source, articles]) => (
-            <section key={source}>
-              <h2 className="text-xl font-semibold mb-4">{source}</h2>
-              {articles.map((item, index) => (
-                <ArticleCard
-                  key={index}
-                  title={item.title}
-                  summary=""
-                  source={item.source}
-                  time={formatTime(item.pubDate)}
-                  url={item.link}
-                  image={item.image}
-                />
-              ))}
+            <section key={source} className="min-w-[280px] max-w-[320px] flex-shrink-0">
+              <h2 className="text-lg font-semibold mb-3">{source}</h2>
+              <div className="flex flex-col gap-4">
+                {articles.map((item, index) => (
+                  <ArticleCard
+                    key={index}
+                    title={item.title}
+                    summary=""
+                    source={item.source}
+                    time={formatTime(item.pubDate)}
+                    url={item.link}
+                    image={item.image}
+                  />
+                ))}
+              </div>
             </section>
           ))}
         </div>
