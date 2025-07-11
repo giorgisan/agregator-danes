@@ -1,15 +1,14 @@
 // /pages/_document.tsx
 import { Html, Head, Main, NextScript } from 'next/document'
-import { GA_MEASUREMENT_ID } from '@/lib/ga'
 
 export default function Document() {
   return (
     <Html lang="sl">
       <Head>
-        {/* Google Analytics */}
+        {/* Google tag (gtag.js) */}
         <script
           async
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          src="https://www.googletagmanager.com/gtag/js?id=G-PCEMG0NP3J"
         />
         <script
           dangerouslySetInnerHTML={{
@@ -17,7 +16,7 @@ export default function Document() {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${GA_MEASUREMENT_ID}');
+              gtag('config', 'G-PCEMG0NP3J');
             `,
           }}
         />
