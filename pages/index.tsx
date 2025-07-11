@@ -18,6 +18,7 @@ type NewsBySource = Record<string, Article[]>
 export default function Home() {
   const [newsBySource, setNewsBySource] = useState<NewsBySource>({})
   const [loading, setLoading] = useState(true)
+  const [viewMode, setViewMode] = useState<'bySource' | 'byTime'>('bySource')
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -43,6 +44,10 @@ export default function Home() {
       month: '2-digit',
     })
 
+  const allArticlesSorted = Object.values(newsBySource)
+    .flat()
+    .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+
   return (
     <>
       <Head>
@@ -50,7 +55,15 @@ export default function Home() {
       </Head>
       <Header />
       <main className="px-4 py-8 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-10 text-center">🗞️ Zadnje novice v slovenskih medijih</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+          <h1 className="text-4xl font-bold text-center sm:text-left">🗞️ Zadnje novice v slovenskih medijih</h1>
+          <button
+            onClick={() => setViewMode(viewMode === 'bySource' ? 'byTime' : 'bySource')}
+            className="self-center sm:self-auto px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            {viewMode === 'bySource' ? '📅 Prikaži po času' : '📚 Prikaži po virih'}
+          </button>
+        </div>
 
         {loading && <p className="text-center text-gray-400">Nalagam novice ...</p>}
 
@@ -58,26 +71,42 @@ export default function Home() {
           <p className="text-center text-red-500">Ni uspelo naložiti novic.</p>
         )}
 
-        <div className="space-y-14">
-          {Object.entries(newsBySource).map(([source, articles]) => (
-            <section key={source}>
-              <h2 className="text-2xl font-bold mb-4">{source}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {articles.map((item, index) => (
-                  <ArticleCard
-                    key={`${source}-${index}`}
-                    title={item.title}
-                    summary=""
-                    source={item.source}
-                    time={formatTime(item.pubDate)}
-                    url={item.link}
-                    image={item.image}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+        {viewMode === 'byTime' ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {allArticlesSorted.map((item, index) => (
+              <ArticleCard
+                key={`${item.source}-${index}`}
+                title={item.title}
+                summary=""
+                source={item.source}
+                time={formatTime(item.pubDate)}
+                url={item.link}
+                image={item.image}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-14">
+            {Object.entries(newsBySource).map(([source, articles]) => (
+              <section key={source}>
+                <h2 className="text-2xl font-bold mb-4">{source}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {articles.map((item, index) => (
+                    <ArticleCard
+                      key={`${source}-${index}`}
+                      title={item.title}
+                      summary=""
+                      source={item.source}
+                      time={formatTime(item.pubDate)}
+                      url={item.link}
+                      image={item.image}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
       </main>
       <Footer />
     </>
