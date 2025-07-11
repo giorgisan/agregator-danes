@@ -1,3 +1,4 @@
+// lib/fetchRSSFeeds.ts
 import Parser from 'rss-parser'
 
 const parser: Parser<any> = new Parser({
@@ -10,7 +11,7 @@ const feeds = [
   { name: '24ur', url: 'https://www.24ur.com/rss/' },
   { name: 'RTV Slovenija', url: 'https://www.rtvslo.si/rss' },
   { name: 'Delo', url: 'https://www.delo.si/rss/' },
-  { name: 'Siol.net', url: 'https://www.siol.net/rss/novice.xml' },
+  { name: 'Siol.net', url: 'https://siol.net/rss/novice.xml' },
   { name: 'Dnevnik', url: 'https://www.dnevnik.si/rss' }
 ]
 
@@ -27,12 +28,12 @@ export async function fetchAllFeedsBySource() {
     try {
       const parsedFeed = await parser.parseURL(feed.url)
 
-      const items = parsedFeed.items?.slice(0, 5).map(item => {
+      const items = (parsedFeed.items || []).slice(0, 5).map(item => {
         const image =
           item.enclosure?.url ||
           item['media:content']?.url ||
           extractImageFromDescription(item.content || item.contentSnippet || item.description) ||
-          `/default-news.jpg`
+          '/default-news.jpg'
 
         return {
           title: item.title,
@@ -41,14 +42,14 @@ export async function fetchAllFeedsBySource() {
           source: feed.name,
           image
         }
-      }) || []
+      })
 
       results[feed.name] = items.sort(
         (a, b) => new Date(b.pubDate!).getTime() - new Date(a.pubDate!).getTime()
       )
-  } catch (err) {
-  console.error(`Napaka pri feedu ${feed.name}:`, (err as any).message);
-  }
+    } catch (err) {
+      console.error(`❌ Napaka pri feedu ${feed.name}:`, (err as any).message || err)
+    }
   }
 
   return results
