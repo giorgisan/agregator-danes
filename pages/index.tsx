@@ -40,7 +40,7 @@ export default function Home() {
       hour: '2-digit',
       minute: '2-digit',
       day: '2-digit',
-      month: '2-digit'
+      month: '2-digit',
     })
 
   return (
@@ -71,4 +71,15 @@ export default function Home() {
                     source={item.source}
                     time={formatTime(item.pubDate)}
                     url={item.link}
-                    image={item.i
+                    image={item.image}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </main>
+      <Footer />
+    </>
+  )
+}
