@@ -49,34 +49,29 @@ export default function Home() {
         <title>Agregator Danes</title>
       </Head>
       <Header />
-      <main className="px-4 py-6 max-w-full overflow-x-auto">
-        <h1 className="text-3xl font-bold mb-6">🗞️ Zadnje novice v slovenskih medijih</h1>
+      <main className="px-4 py-8 max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold mb-10 text-center">📰 Zadnje novice v slovenskih medijih</h1>
 
-        {loading && <p className="text-gray-400">Nalagam novice ...</p>}
+        {loading && <p className="text-center text-gray-400">Nalagam novice ...</p>}
 
         {!loading && Object.keys(newsBySource).length === 0 && (
-          <p className="text-red-500">Ni uspelo naložiti novic.</p>
+          <p className="text-center text-red-500">Ni uspelo naložiti novic.</p>
         )}
 
-        <div className="flex gap-6 overflow-x-auto">
-          {Object.entries(newsBySource).map(([source, articles]) => (
-            <section key={source} className="min-w-[280px] max-w-[320px] flex-shrink-0">
-              <h2 className="text-lg font-semibold mb-3">{source}</h2>
-              <div className="flex flex-col gap-4">
-                {articles.map((item, index) => (
-                  <ArticleCard
-                    key={index}
-                    title={item.title}
-                    summary=""
-                    source={item.source}
-                    time={formatTime(item.pubDate)}
-                    url={item.link}
-                    image={item.image}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+          {Object.entries(newsBySource).map(([source, articles]) =>
+            articles.map((item, index) => (
+              <ArticleCard
+                key={`${source}-${index}`}
+                title={item.title}
+                summary=""
+                source={source}
+                time={formatTime(item.pubDate)}
+                url={item.link}
+                image={item.image}
+              />
+            ))
+          )}
         </div>
       </main>
       <Footer />
