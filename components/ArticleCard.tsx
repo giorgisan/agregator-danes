@@ -14,17 +14,19 @@ export default function ArticleCard({ title, summary, source, time, url, image }
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block border border-gray-700 rounded-md p-3 hover:bg-gray-800 transition bg-gray-900"
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden border border-gray-200 dark:border-gray-700"
     >
       <img
         src={image || "/default-news.jpg"}
         alt={title}
-        className="w-full h-28 object-cover rounded mb-2"
+        className="w-full h-40 object-cover"
       />
-      <h3 className="text-base font-semibold mb-1 leading-snug">{title}</h3>
-      <p className="text-xs text-gray-400 mb-1">{summary}</p>
-      <div className="text-xs text-gray-500">
-        {source} • {time}
+      <div className="p-4">
+        <h3 className="text-base font-semibold text-gray-800 dark:text-white leading-snug mb-1">{title}</h3>
+        <p className="text-xs text-gray-400 mb-1">{summary}</p>
+        <div className="text-xs text-gray-500 dark:text-gray-400">
+          {source} • {time}
+        </div>
       </div>
     </a>
   )
