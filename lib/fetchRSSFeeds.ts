@@ -46,9 +46,9 @@ export async function fetchAllFeedsBySource() {
       results[feed.name] = items.sort(
         (a, b) => new Date(b.pubDate!).getTime() - new Date(a.pubDate!).getTime()
       )
-    } catch (err) {
-      console.error(`Napaka pri feedu ${feed.name}:`, err)
-    }
+  } catch (err) {
+  console.error(`Napaka pri feedu ${feed.name}:`, (err as any).message);
+  }
   }
 
   return results
